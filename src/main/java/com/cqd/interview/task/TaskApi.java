@@ -17,8 +17,10 @@ import java.util.List;
 public class TaskApi {
 
     @GetMapping("/tasks")
-    public Mono<ResponseEntity<ListTasksResponse>> listTasks(@RequestParam List<Integer> id, @RequestParam Integer limit, @RequestParam Integer offset) {
-        log.info("List tasks with id {}, and limit {} with offset {}", id, limit, offset);
+    public Mono<ResponseEntity<ListTasksResponse>> listTasks(@RequestParam(required = false) List<String> taskId,
+                                                             @RequestParam(required = false) Integer limit,
+                                                             @RequestParam(required = false) Integer offset) {
+        log.info("List tasks with id {}, and limit {} with offset {}", taskId, limit, offset);
         return Mono.empty();
     }
 
