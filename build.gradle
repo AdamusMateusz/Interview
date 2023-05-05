@@ -33,6 +33,10 @@ dependencies {
 
 	//Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// https://mvnrepository.com/artifact/info.debatty/java-string-similarity
+	implementation 'info.debatty:java-string-similarity:2.0.0'
+
 }
 
 tasks.named('test') {
