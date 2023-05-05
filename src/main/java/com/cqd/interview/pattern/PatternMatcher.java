@@ -26,21 +26,25 @@ public class PatternMatcher {
     }
 
     public MatchingResult findFirstBestMatch() {
-        int iterations = this.input.length() - (this.pattern.length() - 1);
-
-        IndexWithDistance bestMatch = IntStream.range(0, iterations)
-                .mapToObj(this::measureSimilarity)
-                .reduce(
-                        new IndexWithDistance(-1, Double.MAX_VALUE),
-                        (curr, next) -> next.distance() < curr.distance() ? next : curr
-                );
+        IndexWithDistance bestMatch = tryToFindFirstBestMatch();
 
         if (bestMatch.index() == -1 || bestMatch.distance() == this.pattern.length()) {
             return new MatchingResult(Boolean.FALSE, null);
         }
 
-        MatchDescription description = new MatchDescription(bestMatch.index(), (int) bestMatch.distance());
+        MatchDescription description = new MatchDescription(bestMatch.index(), (int) Math.ceil(bestMatch.distance()));
         return new MatchingResult(Boolean.TRUE, description);
+    }
+
+    private IndexWithDistance tryToFindFirstBestMatch() {
+        int iterations = this.input.length() - (this.pattern.length() - 1);
+
+        return IntStream.range(0, iterations)
+                .mapToObj(this::measureSimilarity)
+                .reduce(
+                        new IndexWithDistance(-1, Double.MAX_VALUE),
+                        (curr, next) -> next.distance() < curr.distance() ? next : curr
+                );
     }
 
     private IndexWithDistance measureSimilarity(int offset) {

@@ -1,0 +1,44 @@
+package com.cqd.interview.task;
+
+import com.cqd.interview.task.dao.LoggingTasksDao;
+import com.cqd.interview.task.dao.model.CreateNewTaskCommand;
+import com.cqd.interview.task.execution.TasksExecutionService;
+import com.cqd.interview.task.execution.model.ExecuteTaskCommand;
+import com.cqd.interview.task.model.CreateTaskCommand;
+import com.cqd.interview.task.model.api.TaskStatusCode;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+
+@Component
+@AllArgsConstructor
+public class CreateNewTaskHandler {
+
+    private final TasksExecutionService tasksExecutionService;
+    private final LoggingTasksDao tasksDao;
+
+    Mono<Void> handle(String taskId, CreateTaskCommand createTaskCommand) {
+        var daoCommand = buildDaoCommand(taskId, createTaskCommand);
+        var executionCommand = buildExecutionCommand(taskId, createTaskCommand);
+
+        return tasksDao.createNewTask(daoCommand)
+                .then(tasksExecutionService.queue(executionCommand));
+    }
+
+    private CreateNewTaskCommand buildDaoCommand(String taskId, CreateTaskCommand createTaskCommand) {
+        return new CreateNewTaskCommand(
+                taskId,
+                createTaskCommand.input(),
+                createTaskCommand.pattern(),
+                TaskStatusCode.CREATED
+        );
+    }
+
+    private ExecuteTaskCommand buildExecutionCommand(String taskId, CreateTaskCommand createTaskCommand) {
+        return new ExecuteTaskCommand(
+                taskId,
+                createTaskCommand.input(),
+                createTaskCommand.pattern()
+        );
+    }
+}

@@ -1,4 +1,4 @@
-package com.cqd.interview.task.model;
+package com.cqd.interview.task.model.api;
 
 import jakarta.validation.constraints.NotNull;
 

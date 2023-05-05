@@ -1,4 +1,4 @@
-package com.cqd.interview.task.model;
+package com.cqd.interview.task.model.api;
 
 public enum TaskStatusCode {
     CREATED,
