@@ -31,11 +31,19 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
-	//Test
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//Validation
+	implementation 'org.hibernate.validator:hibernate-validator'
 
+	//Nano id
+	implementation 'com.aventrix.jnanoid:jnanoid:2.0.0'
+
+
+	//Finding similarities between strings
 	// https://mvnrepository.com/artifact/info.debatty/java-string-similarity
 	implementation 'info.debatty:java-string-similarity:2.0.0'
+
+	//Test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 }
 
