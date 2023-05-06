@@ -15,6 +15,7 @@ services:
       CDQ_DATABASE_USERNAME: interview_user
       CDQ_DATABASE_PASSWORD: interview_pass
 
+#           PostgreSQL
   db:
     container_name: interview-postgresql
     image: postgres:15.2-alpine
@@ -26,6 +27,17 @@ services:
       - "5432:5432"
     volumes:
       - interview-adamus-postgres_data:/data/db
+
+#           Rabbit MQ
+  rabbitmq:
+    image: rabbitmq:3.12.0-rc.1-management
+    container_name: interview-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - interview-adamus-rabbit_data:/var/lib/rabbitmq/
+      - interview-adamus-rabbit_log:/var/log/rabbitmq
 
 #           OPTIONAL PG ADMIN
 #  pgadmin:
@@ -42,3 +54,5 @@ services:
 volumes:
   interview-adamus-postgres_data:
   interview-adamus-pgadmin_data:
+  interview-adamus-rabbit_data:
+  interview-adamus-rabbit_log:
