@@ -10,7 +10,7 @@ services:
       - "8080:8080"
     environment:
       CDQ_DATABASE_NAME: tasks
-      CDQ_DATABASE_HOST: postgresql
+      CDQ_DATABASE_HOST: interview-postgresql
       CDQ_DATABASE_PORT: 5432
       CDQ_DATABASE_USERNAME: interview_user
       CDQ_DATABASE_PASSWORD: interview_pass

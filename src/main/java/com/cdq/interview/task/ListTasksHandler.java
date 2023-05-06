@@ -1,21 +1,19 @@
 package com.cdq.interview.task;
 
-import com.cdq.interview.task.dao.LoggingTasksDao;
+import com.cdq.interview.task.dao.impl.TasksDao;
 import com.cdq.interview.task.model.TasksQuery;
 import com.cdq.interview.task.model.api.Task;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
+import reactor.core.publisher.Flux;
 
 @Component
 @AllArgsConstructor
 public class ListTasksHandler {
 
-    private final LoggingTasksDao tasksRepository;
+    private final TasksDao tasksRepository;
 
-    public Mono<Collection<Task>> handle(TasksQuery tasksQuery) {
+    public Flux<Task> handle(TasksQuery tasksQuery) {
         return tasksRepository.findTasks(tasksQuery);
     }
 }

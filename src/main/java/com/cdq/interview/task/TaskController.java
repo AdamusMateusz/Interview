@@ -1,8 +1,8 @@
 package com.cdq.interview.task;
 
-import com.cdq.interview.task.model.api.CreateTaskRequest;
 import com.cdq.interview.task.model.CreateTaskCommand;
 import com.cdq.interview.task.model.TasksQuery;
+import com.cdq.interview.task.model.api.CreateTaskRequest;
 import com.cdq.interview.task.model.api.ListTasksResponse;
 import com.cdq.interview.task.model.api.Task;
 import lombok.AllArgsConstructor;
@@ -28,9 +28,16 @@ public class TaskController {
                                                              @RequestParam(required = false) Integer offset) {
         log.info("List tasks with id {}, and limit {} with offset {}", taskId, limit, offset);
 
-        var tasksQuery = new TasksQuery(taskId, limit, offset);
+        List<String> taskIds = taskId;
+
+        if (taskIds == null) {
+            taskIds = List.of();
+        }
+
+        var tasksQuery = new TasksQuery(taskIds, limit, offset);
 
         return taskService.listTasks(tasksQuery)
+                .collectList()
                 .map(ListTasksResponse::new)
                 .map(ResponseEntity::ok);
     }

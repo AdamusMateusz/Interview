@@ -8,9 +8,8 @@ import com.cdq.interview.task.model.api.TaskStatus;
 import com.cdq.interview.task.model.api.TaskStatusCode;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Collection;
 
 @Component
 @AllArgsConstructor
@@ -19,7 +18,7 @@ public class TaskService {
     private final ListTasksHandler listTasksHandler;
     private final CreateNewTaskHandler createNewTaskHandler;
 
-    Mono<Collection<Task>> listTasks(TasksQuery tasksQuery) {
+    Flux<Task> listTasks(TasksQuery tasksQuery) {
         return listTasksHandler.handle(tasksQuery);
     }
 

@@ -3,7 +3,7 @@ package com.cdq.interview.task.execution;
 import com.cdq.interview.pattern.PatternMatcher;
 import com.cdq.interview.pattern.model.FindPatternCommand;
 import com.cdq.interview.pattern.model.MatchingResult;
-import com.cdq.interview.task.dao.LoggingTasksDao;
+import com.cdq.interview.task.dao.impl.TasksDao;
 import com.cdq.interview.task.dao.model.UpdateTaskStatusCommand;
 import com.cdq.interview.task.execution.model.ExecuteTaskCommand;
 import com.cdq.interview.task.model.api.TaskStatusCode;
@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 @AllArgsConstructor
 public class TasksExecutionService {
 
-    private final LoggingTasksDao tasksRepository;
+    private final TasksDao tasksRepository;
 
     public Mono<Void> queue(ExecuteTaskCommand executeTaskCommand) {
         return Mono.just(executeTaskCommand)
