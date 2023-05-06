@@ -1,0 +1,59 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: create-tasks-table
+      author: Adamus
+      changes:
+        - createTable:
+            schema: public
+            tableName: tasks
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  startWith: 100
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: task_id
+                  type: varchar(21)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: input
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: pattern
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: taskStatusCode
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: isMatchFound
+                  type: boolean
+                  constraints:
+                    nullable: true
+              - column:
+                  name: position
+                  type: integer
+                  constraints:
+                    nullable: true
+              - column:
+                  name: typos
+                  type: integer
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false

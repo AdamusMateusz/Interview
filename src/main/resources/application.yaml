@@ -1,3 +1,16 @@
 spring:
   jackson:
     default-property-inclusion: NON_NULL
+  liquibase:
+    change-log: classpath:/db/db.changelog.yaml
+    url: jdbc:postgresql://${cdq.database.host}:${cdq.database.port}/${cdq.database.name}
+    user: ${cdq.database.username}
+    password: ${cdq.database.password}
+
+#cdq:
+#  database:
+#    name: tasks
+#    host: localhost
+#    port: 5432
+#    username: interview_user
+#    password: interview_pass

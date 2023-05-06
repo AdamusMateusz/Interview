@@ -9,5 +9,4 @@
 
 ## Commands
 
-docker build -t cdq-adamus/interview .
-docker run -p 8080:8080 cdq-adamus/interview
+`docker-compose up --build`
