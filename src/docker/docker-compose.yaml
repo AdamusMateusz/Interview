@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+
+  interview-task-service1:
+    build:
+      context: ../..
+      dockerfile: src/docker/Dockerfile
+    ports:
+      - "8080:8080"
+#    environment:
+
