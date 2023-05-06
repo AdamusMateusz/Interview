@@ -11,16 +11,19 @@ public class ListTasksStatementFactory {
 
         if (!tasksQuery.tasksIds().isEmpty()) {
             for (int i = 0; i < tasksQuery.tasksIds().size(); i++) {
-                statement = statement.bind("$" + (i + 3), tasksQuery.tasksIds().get(i));
+                statement = statement.bind(i, tasksQuery.tasksIds().get(i));
             }
         }
 
+        int paramsCounter = tasksQuery.tasksIds().size();
+
         if (tasksQuery.limit() != null) {
-            statement = statement.bind("$1", tasksQuery.limit());
+            statement = statement.bind(paramsCounter, tasksQuery.limit());
+            paramsCounter += 1;
         }
 
         if (tasksQuery.offset() != null) {
-            statement = statement.bind("$2", tasksQuery.offset());
+            statement = statement.bind(paramsCounter, tasksQuery.offset());
         }
 
         return statement;

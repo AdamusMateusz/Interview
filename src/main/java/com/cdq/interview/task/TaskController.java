@@ -29,12 +29,17 @@ public class TaskController {
         log.info("List tasks with id {}, and limit {} with offset {}", taskId, limit, offset);
 
         List<String> taskIds = taskId;
+        Integer queryOffset = offset;
 
         if (taskIds == null) {
             taskIds = List.of();
         }
 
-        var tasksQuery = new TasksQuery(taskIds, limit, offset);
+        if (queryOffset == null) {
+            queryOffset = 0;
+        }
+
+        var tasksQuery = new TasksQuery(taskIds, limit, queryOffset);
 
         return taskService.listTasks(tasksQuery)
                 .collectList()

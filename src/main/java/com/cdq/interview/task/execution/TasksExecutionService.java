@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 @AllArgsConstructor
 public class TasksExecutionService {
 
-    private final TasksDao tasksRepository;
+    private final TasksDao tasksDao;
 
     public Mono<Void> queue(ExecuteTaskCommand executeTaskCommand) {
         return Mono.just(executeTaskCommand)
@@ -23,7 +23,7 @@ public class TasksExecutionService {
                 .map(PatternMatcher::fromCommand)
                 .map(PatternMatcher::findFirstBestMatch)
                 .map(result -> buildUpdateTaskStatusCommand(executeTaskCommand, result))
-                .map(tasksRepository::updateTaskStatus)
+                .flatMap(tasksDao::updateTaskStatus)
                 .then();
     }
 

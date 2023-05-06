@@ -16,23 +16,27 @@ public class ListTasksDaoSQLFactory {
             stringBuilder.append("WHERE task_id in ( ");
 
             String idsPlaceholders = IntStream.range(0, tasksQuery.tasksIds().size())
-                    .map(i -> i + 3)
+                    .map(i -> i + 1)
                     .mapToObj(String::valueOf)
                     .map(s -> "$" + s)
                     .collect(Collectors.joining(", "));
 
             stringBuilder.append(idsPlaceholders);
 
-            stringBuilder.append(") ");
+            stringBuilder.append(" ) ");
         }
         stringBuilder.append("ORDER BY id ");
 
+        int paramsCounter = tasksQuery.tasksIds().size();
+
         if (tasksQuery.limit() != null) {
-            stringBuilder.append("LIMIT $1 ");
+            paramsCounter += 1;
+            stringBuilder.append("LIMIT $").append(paramsCounter);
         }
 
         if (tasksQuery.offset() != null) {
-            stringBuilder.append("OFFSET $2");
+            paramsCounter += 1;
+            stringBuilder.append(" OFFSET $").append(paramsCounter);
         }
 
         return stringBuilder.toString();

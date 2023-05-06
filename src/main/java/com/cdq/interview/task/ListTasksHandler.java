@@ -11,9 +11,9 @@ import reactor.core.publisher.Flux;
 @AllArgsConstructor
 public class ListTasksHandler {
 
-    private final TasksDao tasksRepository;
+    private final TasksDao tasksDao;
 
     public Flux<Task> handle(TasksQuery tasksQuery) {
-        return tasksRepository.findTasks(tasksQuery);
+        return tasksDao.findTasks(tasksQuery);
     }
 }
