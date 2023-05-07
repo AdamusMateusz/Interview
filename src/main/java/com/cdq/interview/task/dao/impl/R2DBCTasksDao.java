@@ -8,6 +8,7 @@ import com.cdq.interview.task.dao.util.TasksDaoSQLCode;
 import com.cdq.interview.task.model.TasksQuery;
 import com.cdq.interview.task.model.api.Task;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
+import io.r2dbc.postgresql.api.PostgresqlConnection;
 import io.r2dbc.postgresql.api.PostgresqlResult;
 import io.r2dbc.postgresql.api.PostgresqlStatement;
 import io.r2dbc.spi.ConnectionFactory;
@@ -30,42 +31,55 @@ public class R2DBCTasksDao implements TasksDao {
 
     @Override
     public Flux<Task> findTasks(TasksQuery tasksQuery) {
-        return connectionFactory.create()
-                .map(c -> ListTasksStatementFactory.buildStatement(tasksQuery, c))
-                .flatMapMany(PostgresqlStatement::execute)
-                .flatMap(FindTaskRowMapper::map);
+        return Flux.usingWhen(
+                connectionFactory.create(),
+                connection -> Flux.just(connection)
+                        .map(c -> ListTasksStatementFactory.buildStatement(tasksQuery, c))
+                        .flatMap(PostgresqlStatement::execute)
+                        .flatMap(FindTaskRowMapper::map),
+                PostgresqlConnection::close
+
+        );
     }
 
     @Override
     public Mono<Void> createNewTask(CreateNewTaskCommand createNewTaskCommand) {
-        return connectionFactory.create()
-                .map(c -> c.createStatement(TasksDaoSQLCode.INSERT_TASK))
-                .map(statement ->
-                        statement.bind("$1", createNewTaskCommand.id())
-                                .bind("$2", createNewTaskCommand.input())
-                                .bind("$3", createNewTaskCommand.pattern())
-                                .bind("$4", createNewTaskCommand.taskStatusCode().toString())
-                )
-                .flatMapMany(PostgresqlStatement::execute)
-                .flatMap(PostgresqlResult::getRowsUpdated)
-                .doOnNext(rows -> log.info("Inserted rows count: {}", rows))
-                .then();
+        return Mono.usingWhen(
+                connectionFactory.create(),
+                connection -> Mono.just(connection)
+                        .map(c -> c.createStatement(TasksDaoSQLCode.INSERT_TASK))
+                        .map(statement ->
+                                statement.bind("$1", createNewTaskCommand.id())
+                                        .bind("$2", createNewTaskCommand.input())
+                                        .bind("$3", createNewTaskCommand.pattern())
+                                        .bind("$4", createNewTaskCommand.taskStatusCode().toString())
+                        )
+                        .flatMapMany(PostgresqlStatement::execute)
+                        .flatMap(PostgresqlResult::getRowsUpdated)
+                        .doOnNext(rows -> log.info("Inserted rows count: {}", rows))
+                        .then(),
+                PostgresqlConnection::close
+        );
     }
 
     @Override
     public Mono<Void> updateTaskStatus(UpdateTaskStatusCommand command) {
-        return connectionFactory.create()
-                .map(c -> c.createStatement(TasksDaoSQLCode.UPDATE_TASK))
-                .map(statement ->
-                        statement.bind("$1", command.statusCode().toString())
-                                .bind("$2", command.isMatchFound())
-                                .bind("$3", command.position())
-                                .bind("$4", command.typos())
-                                .bind("$5", command.id())
-                )
-                .flatMapMany(PostgresqlStatement::execute)
-                .flatMap(PostgresqlResult::getRowsUpdated)
-                .doOnNext(rows -> log.info("Updated rows count: {}", rows))
-                .then();
+        return Mono.usingWhen(
+                connectionFactory.create(),
+                connection -> Mono.just(connection)
+                        .map(c -> c.createStatement(TasksDaoSQLCode.UPDATE_TASK))
+                        .map(statement ->
+                                statement.bind("$1", command.statusCode().toString())
+                                        .bind("$2", command.isMatchFound())
+                                        .bind("$3", command.position())
+                                        .bind("$4", command.typos())
+                                        .bind("$5", command.id())
+                        )
+                        .flatMapMany(PostgresqlStatement::execute)
+                        .flatMap(PostgresqlResult::getRowsUpdated)
+                        .doOnNext(rows -> log.info("Updated rows count: {}", rows))
+                        .then(),
+                PostgresqlConnection::close
+        );
     }
 }
