@@ -1,6 +1,6 @@
-package com.cdq.interview.config;
+package com.cdq.interview.config.rabbit;
 
-import com.cdq.interview.config.model.TopologyCreatedEvent;
+import com.cdq.interview.config.rabbit.model.TopologyCreatedEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;

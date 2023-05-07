@@ -1,6 +1,6 @@
 package com.cdq.interview.task.execution.receiver;
 
-import com.cdq.interview.config.model.TopologyCreatedEvent;
+import com.cdq.interview.config.rabbit.model.TopologyCreatedEvent;
 import com.cdq.interview.task.execution.mapper.MessageSerializer;
 import com.cdq.interview.task.execution.mapper.RetryMessageException;
 import com.cdq.interview.task.execution.model.ExecuteTaskCommand;

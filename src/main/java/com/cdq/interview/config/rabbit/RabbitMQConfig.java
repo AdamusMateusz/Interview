@@ -1,4 +1,4 @@
-package com.cdq.interview.config;
+package com.cdq.interview.config.rabbit;
 
 import com.rabbitmq.client.Address;
 import com.rabbitmq.client.ConnectionFactory;

@@ -1,4 +1,4 @@
-package com.cdq.interview.config;
+package com.cdq.interview.config.r2dbc;
 
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;

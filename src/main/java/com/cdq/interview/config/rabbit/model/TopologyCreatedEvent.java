@@ -1,4 +1,4 @@
-package com.cdq.interview.config.model;
+package com.cdq.interview.config.rabbit.model;
 
 import org.springframework.context.ApplicationEvent;
 
