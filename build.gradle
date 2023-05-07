@@ -54,6 +54,8 @@ dependencies {
 	//Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	//Hazelcast
+	implementation 'com.hazelcast:hazelcast:5.2.3'
 }
 
 tasks.named('test') {

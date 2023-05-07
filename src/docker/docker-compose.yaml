@@ -1,15 +1,65 @@
 version: '3.8'
 services:
-
-  interview-task-service:
-    container_name: interview-service
+#         InterviewService with api and worker
+  interview-service-api-worker:
+    container_name: interview-service-api-worker
     build:
       context: ../..
       dockerfile: src/docker/Dockerfile
     ports:
       - "8080:8080"
+      - "5701:5701"
     environment:
+      #Delay in message processing to simulate long running task
       CDQ_PROCESSING_DELAY: 750ms
+      #Hazelcast config
+      CDQ_HAZELCAST_OWN: interview-service-api-worker
+      CDQ_HAZELCAST_OTHERS: interview-service-api,interview-service-worker
+      #Database
+      CDQ_DATABASE_NAME: tasks
+      CDQ_DATABASE_HOST: interview-postgresql
+      CDQ_DATABASE_PORT: 5432
+      CDQ_DATABASE_USERNAME: interview_user
+      CDQ_DATABASE_PASSWORD: interview_pass
+
+#         InterviewService
+  interview-service-api:
+    container_name: interview-service-api
+    build:
+      context: ../..
+      dockerfile: src/docker/Dockerfile
+    ports:
+      - "8081:8080"
+      - "5702:5701"
+    environment:
+      #Delay in message processing to simulate long running task
+      CDQ_PROCESSING_DELAY: 750ms
+      #Hazelcast config
+      CDQ_HAZELCAST_OWN: interview-service-api
+      CDQ_HAZELCAST_OTHERS: interview-service-api-worker,interview-service-worker
+      #Database
+      CDQ_DATABASE_NAME: tasks
+      CDQ_DATABASE_HOST: interview-postgresql
+      CDQ_DATABASE_PORT: 5432
+      CDQ_DATABASE_USERNAME: interview_user
+      CDQ_DATABASE_PASSWORD: interview_pass
+
+#         InterviewService
+  interview-service-worker:
+    container_name: interview-service-worker
+    build:
+      context: ../..
+      dockerfile: src/docker/Dockerfile
+    ports:
+      - "8082:8080"
+      - "5703:5701"
+    environment:
+      #Delay in message processing to simulate long running task
+      CDQ_PROCESSING_DELAY: 750ms
+      #Hazelcast config
+      CDQ_HAZELCAST_OWN: interview-service-worker
+      CDQ_HAZELCAST_OTHERS: interview-service-api-worker,interview-service-api
+      #Database
       CDQ_DATABASE_NAME: tasks
       CDQ_DATABASE_HOST: interview-postgresql
       CDQ_DATABASE_PORT: 5432
