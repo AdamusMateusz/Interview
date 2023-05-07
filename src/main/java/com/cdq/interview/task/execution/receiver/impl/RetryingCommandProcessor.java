@@ -24,7 +24,7 @@ public class RetryingCommandProcessor implements TaskCommandProcessor {
         if (commandIndex == retryEveryNthElement){
             processedCounter.set(0);
             log.info("Retrying command {}", command);
-            throw new RetryMessageException();
+            return Mono.error(new RetryMessageException());
         }
 
         return taskCommandProcessor.process(command);

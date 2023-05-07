@@ -44,8 +44,9 @@ public class TasksQueueListener {
         ExecuteTaskCommand command = messageSerializer.toCommandObject(commandBody);
 
         return taskCommandProcessor.process(command)
-                .onErrorContinue(Throwable.class, (throwable, o) -> log.error("Unknown error. Skipping message {}", command, throwable))
-                .onErrorResume(RetryMessageException.class, throwable -> tasksExecutionService.queue(command));
+                .doOnError(throwable -> log.error("Error occurred: ", throwable))
+                .onErrorResume(RetryMessageException.class, throwable -> tasksExecutionService.queue(command))
+                .onErrorResume(Throwable.class, throwable -> Mono.empty());
     }
 
 }

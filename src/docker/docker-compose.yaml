@@ -1,7 +1,7 @@
 version: '3.8'
 services:
 
-  interview-task-service1:
+  interview-task-service:
     container_name: interview-service
     build:
       context: ../..

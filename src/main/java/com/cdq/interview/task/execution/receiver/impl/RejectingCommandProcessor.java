@@ -24,7 +24,7 @@ public class RejectingCommandProcessor implements TaskCommandProcessor {
             processedCounter.set(0);
 
             log.info("Rejecting command {}", command);
-            throw new RuntimeException();
+            return Mono.error(new RuntimeException());
         }
 
         return taskCommandProcessor.process(command);
