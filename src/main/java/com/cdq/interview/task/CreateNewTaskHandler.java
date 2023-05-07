@@ -2,7 +2,7 @@ package com.cdq.interview.task;
 
 import com.cdq.interview.task.dao.impl.TasksDao;
 import com.cdq.interview.task.dao.model.CreateNewTaskCommand;
-import com.cdq.interview.task.execution.TasksExecutionService;
+import com.cdq.interview.task.execution.sender.TasksExecutionService;
 import com.cdq.interview.task.execution.model.ExecuteTaskCommand;
 import com.cdq.interview.task.model.CreateTaskCommand;
 import com.cdq.interview.task.model.api.TaskStatusCode;

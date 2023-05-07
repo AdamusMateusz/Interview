@@ -9,6 +9,7 @@ services:
     ports:
       - "8080:8080"
     environment:
+      CDQ_PROCESSING_DELAY: 750ms
       CDQ_DATABASE_NAME: tasks
       CDQ_DATABASE_HOST: interview-postgresql
       CDQ_DATABASE_PORT: 5432
