@@ -278,7 +278,7 @@ Also, you can create 1000 requests to stress test application:
 time for i in {1..1000}; do curl -s --request POST --url http://localhost:8080/api/tasks/create-task-command --header 'Content-Type: application/json' --data '{"input": "ABCD","pattern": "BWD"}'; done >> /dev/null
 ```
 
-Creating this amount of tasks should take about 20 seconds (about 20ms per request). As a bonus for using rabbit, we get a panel with a task processing graph. <br> ![rabbit](docs/rabbit.png).
+Creating this amount of tasks should take about 20 seconds (about 20ms per request). As a bonus for using rabbit, we get a panel with a task processing graph. <br> ![rabbit](docs/rabbit.png)
 
 ## Scalability and performance of the solution
 The application has two profiles. You can use one or both of them. The `api` profile allows you to handle REST requests. The `worker` profile starts listening for messages and processing tasks. The application can scale horizontally and vertically. Here are methods to improve its performance:
