@@ -36,6 +36,47 @@ However, due to time constraints, some aspects of the app have been simplified a
 }
 ```
 
+### Description of the processes
+
+Putting task in queue
+
+```mermaid
+stateDiagram-v2
+    newTask: New task request
+    saveTask: Save task in database
+    queue: Put new task in queue
+    cache: Save task in clustered cache
+    [*] --> newTask
+    newTask --> saveTask
+    saveTask --> cache
+    cache --> queue
+    queue --> [*]
+```
+
+Receiving task from queue
+
+```mermaid
+stateDiagram-v2
+    recive: Receive task command from queue
+    process: Process task step (sleep)
+    updateCache: Update task completion percentage in clustered cache
+    database: Save task result in database
+    Processing: Message processing loop
+    ack: Ack command (remove from queue)
+    [*] --> recive
+    recive --> Processing
+    state Processing {
+        [*] --> process
+        state if_state <<choice>>
+        process --> if_state
+        if_state --> updateCache: Task not ended
+        updateCache --> process
+    }
+   if_state --> database: Task ended
+   database --> ack
+
+```
+
 ### How to run this app
 Below is a description of how to run the application. To run this application you need to install Java 17+ and docker. When you run docker-compose, the following components will start:
 - Postgres
@@ -47,7 +88,7 @@ Below is a description of how to run the application. To run this application yo
 Run `gradle build` task in root project folder, then open terminal, change working directory to `cd src/docker` and run command `docker-compose up --build`. The application is ready to use after about 2-5 minutes(pulling images not included) depending on the computer where the code is run.
 
 #### Long description
-Long description on how to launch this app using terminal or InteliJ.
+Long description on how to launch this app using terminal or IntelliJ.
 
 ##### Terminal
 1. Open new terminal window
