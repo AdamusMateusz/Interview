@@ -7,6 +7,7 @@ import com.cdq.interview.task.model.api.ListTasksResponse;
 import com.cdq.interview.task.model.api.Task;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 @Slf4j
+@Profile("api")
 @RestController
 @AllArgsConstructor
 @RequestMapping("api")

@@ -10,11 +10,13 @@ services:
       - "8080:8080"
       - "5701:5701"
     environment:
-      #Delay in message processing to simulate long running task
-      CDQ_PROCESSING_DELAY: 750ms
+      #Delay in message processing to simulate long-running task
+      CDQ_PROCESSING_DELAY: 1000ms
       #Hazelcast config
       CDQ_HAZELCAST_OWN: interview-service-api-worker
       CDQ_HAZELCAST_OTHERS: interview-service-api,interview-service-worker
+      #Application profiles
+      SPRING_PROFILES_ACTIVE: api,worker
       #Database
       CDQ_DATABASE_NAME: tasks
       CDQ_DATABASE_HOST: interview-postgresql
@@ -22,7 +24,7 @@ services:
       CDQ_DATABASE_USERNAME: interview_user
       CDQ_DATABASE_PASSWORD: interview_pass
 
-#         InterviewService
+#         InterviewService only api
   interview-service-api:
     container_name: interview-service-api
     build:
@@ -32,11 +34,11 @@ services:
       - "8081:8080"
       - "5702:5701"
     environment:
-      #Delay in message processing to simulate long running task
-      CDQ_PROCESSING_DELAY: 750ms
       #Hazelcast config
       CDQ_HAZELCAST_OWN: interview-service-api
       CDQ_HAZELCAST_OTHERS: interview-service-api-worker,interview-service-worker
+      #Application profiles
+      SPRING_PROFILES_ACTIVE: api
       #Database
       CDQ_DATABASE_NAME: tasks
       CDQ_DATABASE_HOST: interview-postgresql
@@ -44,21 +46,22 @@ services:
       CDQ_DATABASE_USERNAME: interview_user
       CDQ_DATABASE_PASSWORD: interview_pass
 
-#         InterviewService
+#         InterviewService only worker
   interview-service-worker:
     container_name: interview-service-worker
     build:
       context: ../..
       dockerfile: src/docker/Dockerfile
     ports:
-      - "8082:8080"
       - "5703:5701"
     environment:
-      #Delay in message processing to simulate long running task
-      CDQ_PROCESSING_DELAY: 750ms
+      #Delay in message processing to simulate long-running task(shorter than delay in node with api)
+      CDQ_PROCESSING_DELAY: 200ms
       #Hazelcast config
       CDQ_HAZELCAST_OWN: interview-service-worker
       CDQ_HAZELCAST_OTHERS: interview-service-api-worker,interview-service-api
+      #Application profiles
+      SPRING_PROFILES_ACTIVE: worker
       #Database
       CDQ_DATABASE_NAME: tasks
       CDQ_DATABASE_HOST: interview-postgresql

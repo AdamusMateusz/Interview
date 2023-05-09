@@ -7,6 +7,7 @@ import com.cdq.interview.task.execution.model.ExecuteTaskCommand;
 import com.cdq.interview.task.execution.sender.TasksExecutionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -15,6 +16,7 @@ import reactor.rabbitmq.Receiver;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Profile("worker")
 @Slf4j
 @Component
 @AllArgsConstructor
