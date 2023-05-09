@@ -5,6 +5,7 @@ import com.cdq.interview.task.dao.model.UpdateTaskStatusCommand;
 import com.cdq.interview.task.dao.util.FindTaskRowMapper;
 import com.cdq.interview.task.dao.util.ListTasksStatementFactory;
 import com.cdq.interview.task.dao.util.TasksDaoSQLCode;
+import com.cdq.interview.task.dao.util.UpdateStatusStatementFactory;
 import com.cdq.interview.task.model.TasksQuery;
 import com.cdq.interview.task.model.api.Task;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
@@ -14,13 +15,11 @@ import io.r2dbc.postgresql.api.PostgresqlStatement;
 import io.r2dbc.spi.ConnectionFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
 @Slf4j
-@Component
 public class R2DBCTasksDao implements TasksDao {
 
     private final PostgresqlConnectionFactory connectionFactory;
@@ -68,13 +67,7 @@ public class R2DBCTasksDao implements TasksDao {
                 connectionFactory.create(),
                 connection -> Mono.just(connection)
                         .map(c -> c.createStatement(TasksDaoSQLCode.UPDATE_TASK))
-                        .map(statement ->
-                                statement.bind("$1", command.statusCode().toString())
-                                        .bind("$2", command.isMatchFound())
-                                        .bind("$3", command.position())
-                                        .bind("$4", command.typos())
-                                        .bind("$5", command.id())
-                        )
+                        .map(statement -> UpdateStatusStatementFactory.bind(command, statement))
                         .flatMapMany(PostgresqlStatement::execute)
                         .flatMap(PostgresqlResult::getRowsUpdated)
                         .doOnNext(rows -> log.info("Updated rows count: {}", rows))

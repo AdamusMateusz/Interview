@@ -1,8 +1,12 @@
 package com.cdq.interview.task.model.api;
 
-public enum TaskStatusCode {
+import java.io.Serializable;
+
+public enum TaskStatusCode implements Serializable {
     CREATED,
     STARTED,
     ENDED,
+    REJECTED,
+    ERROR,
 
 }

@@ -6,14 +6,10 @@ import com.cdq.interview.task.model.TasksQuery;
 import com.cdq.interview.task.model.api.Task;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
-@Primary
-@Component
 @AllArgsConstructor
 public class LoggingTasksDao implements TasksDao {
 

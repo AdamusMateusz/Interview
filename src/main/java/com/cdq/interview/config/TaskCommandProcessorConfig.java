@@ -3,6 +3,9 @@ package com.cdq.interview.config;
 import com.cdq.interview.task.dao.impl.TasksDao;
 import com.cdq.interview.task.execution.receiver.TaskCommandProcessor;
 import com.cdq.interview.task.execution.receiver.impl.*;
+import com.cdq.interview.task.model.api.Task;
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.map.IMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,10 +20,13 @@ public class TaskCommandProcessorConfig {
     private Duration delay;
 
     @Bean
-    public TaskCommandProcessor taskCommandProcessor(TasksDao tasksDao) {
+    public TaskCommandProcessor taskCommandProcessor(TasksDao tasksDao, HazelcastInstance hazelcastInstance) {
+
+        IMap<String, Task> tasksCache = hazelcastInstance.getMap("tasks");
 
         TaskCommandProcessor commandProcessor = new TaskCommandProcessorImpl(
-                tasksDao
+                tasksDao,
+                tasksCache
         );
 
         TaskCommandProcessor thirdPercentageIncrement = new PercentageCountingCommandProcessor(
@@ -28,13 +34,16 @@ public class TaskCommandProcessorConfig {
                 99,
                 5,
                 delay,
-                commandProcessor
+                commandProcessor,
+                tasksCache
         );
 
         TaskCommandProcessor retryingProcessor = new RetryingCommandProcessor(
-          new AtomicInteger(0),
-          20,
-          thirdPercentageIncrement
+                new AtomicInteger(0),
+                20,
+                thirdPercentageIncrement,
+                tasksDao,
+                tasksCache
         );
 
         TaskCommandProcessor secondPercentageIncrement = new PercentageCountingCommandProcessor(
@@ -42,13 +51,16 @@ public class TaskCommandProcessorConfig {
                 66,
                 5,
                 delay,
-                retryingProcessor
+                retryingProcessor,
+                tasksCache
         );
 
         TaskCommandProcessor rejectingProcessor = new RejectingCommandProcessor(
                 new AtomicInteger(0),
                 100,
-                secondPercentageIncrement
+                secondPercentageIncrement,
+                tasksDao,
+                tasksCache
         );
 
         TaskCommandProcessor firstPercentageIncrement = new PercentageCountingCommandProcessor(
@@ -56,8 +68,9 @@ public class TaskCommandProcessorConfig {
                 33,
                 5,
                 delay,
-                rejectingProcessor
-                );
+                rejectingProcessor,
+                tasksCache
+        );
 
         return new LoggingTaskCommandProcessor(firstPercentageIncrement);
     }

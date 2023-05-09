@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HazelcastConfig {
 
-
     @Value("${cdq.hazelcast.own}")
     private String ownAddress;
 
@@ -25,6 +24,9 @@ public class HazelcastConfig {
     public HazelcastInstance hazelcastInstance() {
 
         Config config = new Config();
+
+        config.setClassLoader(this.getClass().getClassLoader());
+
         config.setClusterName("cdq-interview-adamus");
         config.getNetworkConfig().setPublicAddress(ownAddress);
 
